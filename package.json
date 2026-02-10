@@ -2,13 +2,32 @@
   "name": "codewildtech-next",
   "version": "0.1.0",
   "private": true,
+  "description": "A modern, high-performance website built with Next.js, featuring smooth animations and responsive design",
+  "author": "CodeWild Tech",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CodeWildTech/codewildwebsite.git"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "tailwindcss",
+    "framer-motion",
+    "web-development"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
+    "axios": "^1.13.4",
+    "framer-motion": "^12.30.0",
+    "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -17,6 +36,7 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4"
   }
 }
