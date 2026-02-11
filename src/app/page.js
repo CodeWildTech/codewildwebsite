@@ -12,7 +12,7 @@ import ContactSection from '@/components/sections/ContactSection';
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black">
+    <main id="home" className="relative min-h-screen bg-[#050505] text-white selection:bg-orange-500 selection:text-black">
       {/* ─── FULL-WIDTH HERO GRADIENT BACKGROUND ─── */}
       <div className="absolute top-0 left-0 w-full h-screen overflow-hidden pointer-events-none z-0">
         {/* Primary Liquid Orange Mesh */}
@@ -50,10 +50,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
               className="flex items-center gap-4"
             >
-              <div className="w-12 h-[1px] bg-orange-500" />
-              <span className="text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-medium">
-                EST. 2024 / Digital Studio
-              </span>
+
             </motion.div>
 
             <div className="hidden md:block text-right">
@@ -111,24 +108,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── MINIMAL CAPABILITIES ─── */}
-          <div className="mt-40 pt-12 border-t border-zinc-900 grid md:grid-cols-4 gap-12">
-            {[
-              { id: '01', label: 'Web Architecture' },
-              { id: '02', label: 'Mobile Systems' },
-              { id: '03', label: 'Cloud Strategy' },
-              { id: '04', label: 'UI/UX Research' },
-            ].map(item => (
-              <div key={item.id} className="group">
-                <span className="text-[10px] text-orange-500 font-mono mb-4 block group-hover:translate-x-1 transition-transform">
-                  {item.id}
-                </span>
-                <h3 className="text-zinc-500 group-hover:text-white transition-colors duration-300 text-sm uppercase tracking-widest font-medium">
-                  {item.label}
-                </h3>
-              </div>
-            ))}
-          </div>
+
         </div>
       </section>
 
