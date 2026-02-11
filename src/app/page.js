@@ -7,6 +7,7 @@ import { ArrowUpRight } from 'lucide-react';
 import AboutSection from '@/components/sections/AboutSection';
 import ServicesSection from '@/components/sections/ServicesSection';
 import ProductsSection from '@/components/sections/ProductsSection';
+import Advertise from '@/components/sections/Advertise';
 import ContactSection from '@/components/sections/ContactSection';
 
 export default function Home() {
@@ -136,6 +137,7 @@ export default function Home() {
         <AboutSection />
         <ServicesSection />
         <ProductsSection />
+        <Advertise />
         <ContactSection />
       </div>
     </main>

@@ -250,73 +250,79 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* ─── MODERN REDESIGNED TEAM SHOWCASE ─── */}
-        <div className="mb-60">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-24">
-            <div>
-              <h3 className="text-orange-500 text-[10px] uppercase tracking-[0.5em] font-bold mb-4">
-                Our Collective
-              </h3>
-              <h2 className="text-6xl md:text-7xl font-bold tracking-tighter">
-                THE <span className="text-zinc-800">CWT</span> SQUAD
-              </h2>
-            </div>
-            <div className="h-[1px] hidden md:block flex-1 bg-zinc-900 mx-12 mb-4" />
-            <p className="text-zinc-500 text-sm italic font-serif">
-              Engineering excellence in motion.
-            </p>
-          </div>
+   {/* ─── MODERN PREMIUM TEAM SHOWCASE ─── */}
+<div className="mb-60">
+  <div className="flex flex-col md:flex-row justify-between items-end mb-20">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8 }}
+    >
+      <h3 className="text-orange-500 text-[10px] uppercase tracking-[0.5em] font-bold mb-4">
+        Our Collective
+      </h3>
+      <h2 className="text-6xl md:text-7xl font-bold tracking-tighter">
+        THE <span className="text-zinc-800 transition-colors duration-700 hover:text-zinc-600">CWT</span> SQUAD
+      </h2>
+    </motion.div>
+    <p className="text-zinc-500 text-sm font-mono mt-4 md:mt-0">
+      [ 04 Core Members ]
+    </p>
+  </div>
 
-          <div className="relative flex overflow-hidden group">
-            <motion.div
-              className="flex gap-16 pr-16"
-              animate={{ x: ['0%', '-50%'] }}
-              transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
-              whileHover={{ animationPlayState: 'paused' }}
-            >
-              {duplicatedTeam.map((member, i) => (
-                <div
-                  key={i}
-                  className="relative w-[320px] md:w-[380px] group/card shrink-0"
-                >
-                  <span className="absolute -left-8 top-10 -rotate-90 text-[10px] font-mono text-zinc-700 tracking-[0.3em] uppercase group-hover/card:text-orange-500 transition-colors">
-                    {member.code}
-                  </span>
-                  <div className="relative overflow-hidden rounded-[2rem] bg-zinc-950 border border-white/5 transition-all duration-700 group-hover/card:rounded-none group-hover/card:border-orange-500/50 group-hover/card:shadow-[0_0_50px_rgba(249,115,22,0.1)]">
-                    <img
-                      src={member.img}
-                      alt={member.name}
-                      className="w-full h-full object-cover aspect-[4/5] grayscale transition-all duration-1000 group-hover/card:grayscale-0 group-hover/card:scale-110"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
-                      <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-6 transform translate-y-4 group-hover/card:translate-y-0 transition-transform duration-700">
-                        <h4 className="text-2xl font-bold tracking-tighter uppercase">
-                          {member.name}
-                        </h4>
-                        <div className="flex justify-between items-center mt-2">
-                          <p className="text-orange-500 text-[10px] uppercase tracking-widest font-mono">
-                            {member.role}
-                          </p>
-                          <div className="flex gap-3">
-                            <Linkedin
-                              size={14}
-                              className="hover:text-orange-500 cursor-pointer"
-                            />
-                            <Github
-                              size={14}
-                              className="hover:text-orange-500 cursor-pointer"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-orange-500/0 group-hover/card:border-orange-500/100 transition-all duration-700 delay-100 rounded-tr-[2rem] group-hover/card:rounded-none" />
-                  </div>
-                </div>
-              ))}
-            </motion.div>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {team.map((member, i) => (
+      <motion.div
+        key={i}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: i * 0.1 }}
+        whileHover={{ y: -10 }}
+        className="group relative"
+      >
+        {/* Member Code Badge */}
+        <div className="absolute -top-3 left-6 z-20 bg-orange-500 text-black text-[10px] font-bold px-2 py-1 rounded-sm opacity-0 group-hover:opacity-100 transition-all duration-300">
+          {member.code}
+        </div>
+
+        <div className="relative overflow-hidden bg-zinc-900 aspect-[4/5] rounded-2xl border border-white/5 group-hover:border-orange-500/30 transition-colors duration-500">
+          {/* Image with subtle zoom and grayscale reveal */}
+          <img
+            src={member.img}
+            alt={member.name}
+            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-out"
+          />
+
+          {/* Premium Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 p-8 flex flex-col justify-end translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+            <h4 className="text-2xl font-bold tracking-tight text-white mb-1">
+              {member.name}
+            </h4>
+            <p className="text-orange-500 text-[11px] uppercase tracking-widest font-medium mb-6">
+              {member.role}
+            </p>
+            
+            {/* Social Icons Reveal */}
+            <div className="flex gap-4 pt-6 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+              <a href="#" className="text-zinc-400 hover:text-white transition-colors">
+                <Linkedin size={18} strokeWidth={1.5} />
+              </a>
+              <a href="#" className="text-zinc-400 hover:text-white transition-colors">
+                <Github size={18} strokeWidth={1.5} />
+              </a>
+              <a href="#" className="text-zinc-400 hover:text-white transition-colors">
+                <Instagram size={18} strokeWidth={1.5} />
+              </a>
+            </div>
           </div>
         </div>
+      </motion.div>
+    ))}
+  </div>
+</div>
 
         {/* ─── THE PROCESS (Clean Line Layout) ─── */}
         <div className="relative pt-20">
@@ -381,3 +387,5 @@ const AboutSection = () => {
 };
 
 export default AboutSection;
+
+  
