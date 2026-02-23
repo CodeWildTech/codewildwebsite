@@ -1,152 +1,119 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import {
-  Rocket,
-  Twitter,
-  Linkedin,
-  Github,
-  Mail,
-  ArrowUpRight,
-} from 'lucide-react';
+import { Rocket, Twitter, Linkedin, Github, ArrowUpRight } from 'lucide-react';
+// Leaflet CSS-ah marakkama import pannanum
+import 'leaflet/dist/leaflet.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const mapContainerRef = useRef(null);
+  const mapInstance = useRef(null);
+
+  useEffect(() => {
+    // Client-side-la mattum run aahura maathiri dynamic import
+    const initMap = async () => {
+      const L = (await import('leaflet')).default;
+
+      // Map already initialize aagi irundha, thirumba panna koodathu
+      if (mapInstance.current) return;
+
+      const location = [8.0883, 77.5385]; // Kanyakumari/Nagercoil area
+
+      mapInstance.current = L.map(mapContainerRef.current, {
+        scrollWheelZoom: false, // Page scroll panna map zoom aaga koodathu
+      }).setView(location, 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(mapInstance.current);
+
+      // Custom Marker (Optional)
+      const DefaultIcon = L.icon({
+        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41]
+      });
+      
+      L.marker(location, { icon: DefaultIcon })
+        .addTo(mapInstance.current)
+        .bindPopup('CodeWild Tech Studio')
+        .openPopup();
+    };
+
+    initMap();
+
+    // Cleanup function: Component unmount aahumpothu map-ah remove pannanum
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+    };
+  }, []);
 
   return (
     <footer className="bg-[#050505] text-white pt-24 pb-12 relative overflow-hidden">
-      {/* Background Decorative Element - Moved to Top */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none z-0">
-        <h2 className="text-[15vw] font-black text-white/[0.02] leading-none uppercase tracking-tighter">
-          CodeWild
-        </h2>
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Main Grid Content */}
-        <div className="grid lg:grid-cols-12 gap-16 mb-24">
-          {/* Section 1: Navigation & Expertise (Now first in layout) */}
-          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 order-2 lg:order-1">
+        
+        {/* TOP SECTION */}
+        <div className="grid lg:grid-cols-12 gap-16 mb-20">
+          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 mb-8">
-                Navigation
-              </h4>
-              <ul className="space-y-4">
-                {['About', 'Services', 'Products', 'Contact'].map(item => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase()}`}
-                      className="text-zinc-400 hover:text-white flex items-center gap-2 group transition-colors"
-                    >
-                      <span className="w-0 group-hover:w-4 h-px bg-orange-500 transition-all duration-300" />
-                      {item}
-                    </Link>
-                  </li>
-                ))}
+              <h4 className="text-[10px] font-bold tracking-[0.3em] text-orange-500 uppercase mb-8">Navigation</h4>
+              <ul className="space-y-4 text-zinc-500 text-sm">
+                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
+                <li><Link href="/services" className="hover:text-white transition-colors">Services</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 mb-8">
-                Expertise
-              </h4>
-              <ul className="space-y-4 text-zinc-400">
-                {[
-                  'Web Apps',
-                  'Mobile Dev',
-                  'Cloud Architecture',
-                  'UI/UX Design',
-                ].map(item => (
-                  <li
-                    key={item}
-                    className="cursor-default hover:text-zinc-200 transition-colors"
-                  >
-                    {item}
-                  </li>
-                ))}
+              <h4 className="text-[10px] font-bold tracking-[0.3em] text-orange-500 uppercase mb-8">Expertise</h4>
+              <ul className="space-y-4 text-zinc-500 text-sm">
+                <li>Web Platforms</li>
+                <li>Cloud Ecosystems</li>
+                <li>UI/UX Design</li>
               </ul>
             </div>
 
-            <div className="col-span-2 md:col-span-1">
-              <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 mb-8">
-                Say Hello
-              </h4>
-              <div className="space-y-6">
-                <a href="mailto:hello@codewild.com" className="block group">
-                  <span className="text-zinc-500 text-xs block mb-1">
-                    Email us at
-                  </span>
-                  <span className="text-lg font-medium group-hover:text-orange-500 transition-colors flex items-center gap-2">
-                    hello@codewild.com <ArrowUpRight size={16} />
-                  </span>
-                </a>
-                <div className="pt-2">
-                  <span className="text-zinc-500 text-xs block mb-1">
-                    Office
-                  </span>
-                  <span className="text-zinc-400 italic font-serif">
-                    Remote / Global
-                  </span>
-                </div>
-              </div>
+            <div>
+              <h4 className="text-[10px] font-bold tracking-[0.3em] text-orange-500 uppercase mb-8">Connect</h4>
+              <a href="mailto:hello@codewild.com" className="text-zinc-400 flex items-center gap-1 group">
+                hello@codewild.com <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </a>
             </div>
           </div>
 
-          {/* Section 2: Brand & Socials (Moved to right/bottom of grid) */}
-          <div className="lg:col-span-5 space-y-8 order-1 lg:order-2">
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <div className="bg-orange-500 p-2.5 rounded-xl group-hover:rotate-12 transition-transform duration-500">
-                <Rocket className="text-black" size={24} fill="currentColor" />
+          <div className="lg:col-span-5 flex flex-col lg:items-end">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-orange-500 p-2 rounded-lg">
+                <Rocket className="text-black" size={20} />
               </div>
-              <span className="text-2xl font-black tracking-tighter uppercase">
-                CodeWild<span className="text-orange-500">Tech</span>
-              </span>
-            </Link>
-            <p className="text-zinc-500 text-lg leading-relaxed max-w-sm font-light">
-              Engineering digital experiences that push the boundaries of what's
-              possible. From local startups to global systems.
-            </p>
-            <div className="flex gap-4">
-              {[
-                { icon: <Twitter size={20} />, href: '#' },
-                { icon: <Linkedin size={20} />, href: '#' },
-                { icon: <Github size={20} />, href: '#' },
-              ].map((social, i) => (
-                <Link
-                  key={i}
-                  href={social.href}
-                  className="w-12 h-12 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-orange-500 hover:border-orange-500 hover:text-black transition-all duration-300"
-                >
-                  {social.icon}
-                </Link>
-              ))}
+              <span className="text-2xl font-black">CodeWild<span className="text-orange-500">Tech</span></span>
             </div>
+            <p className="text-zinc-500 text-sm lg:text-right max-w-xs">
+              Engineering digital clarity through scalable code and precision design.
+            </p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-12 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.2em]">
-            © {currentYear} CodeWild Technology Group.
-          </div>
+        {/* MAP CONTAINER */}
+        <div className="mb-20">
+          <h3 className="text-[10px] font-bold tracking-[0.2em] text-orange-500 mb-6 uppercase">Our Studio Location</h3>
+          <div 
+            ref={mapContainerRef}
+            className="w-full h-[350px] rounded-2xl overflow-hidden border border-zinc-800 z-0 grayscale contrast-125"
+          />
+        </div>
 
-          <div className="flex gap-8 text-zinc-600 text-[10px] font-bold uppercase tracking-[0.2em]">
-            <Link
-              href="/privacy"
-              className="hover:text-white transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link href="/terms" className="hover:text-white transition-colors">
-              Terms
-            </Link>
-            <Link
-              href="/cookies"
-              className="hover:text-white transition-colors"
-            >
-              Cookies
-            </Link>
+        {/* BOTTOM BAR */}
+        <div className="pt-8 border-t border-zinc-900 flex flex-col md:row justify-between items-center gap-4 text-zinc-600 text-[10px] tracking-widest uppercase">
+          <p>© {currentYear} CodeWild Technology Group</p>
+          <div className="flex gap-6">
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
           </div>
         </div>
       </div>
