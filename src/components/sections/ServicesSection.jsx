@@ -1,39 +1,39 @@
 'use client';
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUpRight, Globe, Smartphone, Cloud, Layout, Zap } from 'lucide-react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { ArrowUpRight, Globe, Smartphone, Cloud, Layout, Zap, Plus } from 'lucide-react';
 
 const services = [
   {
     id: '01',
     title: 'Web Platforms',
     desc: 'Architecting high-performance, SEO-optimized web applications using Next.js.',
-    icon: <Globe size={40} />,
-    color: 'from-orange-500/20 to-orange-600/5',
+    icon: <Globe size={32} />,
+    color: 'hover:border-orange-500/50',
     tags: ['SaaS', 'Next.js']
   },
   {
     id: '02',
     title: 'Mobile Ecosystems',
     desc: 'Native and cross-platform mobile solutions for seamless experiences.',
-    icon: <Smartphone size={40} />,
-    color: 'from-blue-500/20 to-blue-600/5',
+    icon: <Smartphone size={32} />,
+    color: 'hover:border-blue-500/50',
     tags: ['React Native', 'iOS']
   },
   {
     id: '03',
     title: 'Cloud Systems',
     desc: 'Secure, auto-scaling cloud architecture designed to handle millions.',
-    icon: <Cloud size={40} />,
-    color: 'from-purple-500/20 to-purple-600/5',
+    icon: <Cloud size={32} />,
+    color: 'hover:border-purple-500/50',
     tags: ['AWS', 'Serverless']
   },
   {
     id: '04',
     title: 'UI/UX Design',
     desc: 'Beautiful interfaces that are conversion-optimized and accessible.',
-    icon: <Layout size={40} />,
-    color: 'from-emerald-500/20 to-emerald-600/5',
+    icon: <Layout size={32} />,
+    color: 'hover:border-emerald-500/50',
     tags: ['Figma', 'UX']
   }
 ];
@@ -42,7 +42,6 @@ const HorizontalServices = () => {
   const targetRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check screen size for responsiveness
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -54,59 +53,64 @@ const HorizontalServices = () => {
     target: targetRef,
   });
 
-  // Mobile-la cards konjam chinathaa irukkum, so range adjust panrom
-  // Desktop: move -70%, Mobile: move -82% (to accommodate CTA card)
-  const x = useTransform(
+  // Smoother scroll transition
+  const xTranslate = useTransform(
     scrollYProgress,
     [0, 1],
-    ["0%", isMobile ? "-82%" : "-70%"]
+    ["0%", isMobile ? "-85%" : "-65%"]
   );
+  
+  const x = useSpring(xTranslate, { stiffness: 100, damping: 20 });
 
   return (
-    <section id="services" ref={targetRef} className="relative h-[400vh] bg-[#050505]">
-      {/* Sticky Container - Intha container thaan screen-la lock aagi nikkum */}
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+    <section id="services" ref={targetRef} className="relative h-[400vh] bg-[#020202]">
+      {/* Sticky Container */}
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
 
-        {/* Background Watermark */}
-        <div className="absolute top-20 left-10 opacity-[0.02] select-none pointer-events-none">
-          <h2 className="text-[25vw] font-black leading-none uppercase">Expertise</h2>
-        </div>
-
-        {/* Title Section */}
-        <div className="flex flex-col px-8 md:px-12 absolute top-16 md:top-24 z-30">
+        {/* --- HEADER SECTION --- */}
+        {/* Increased top padding and clear separation from the cards */}
+        <div className="container mx-auto px-8 md:px-16 mb-20 md:mb-32">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="flex items-center gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 mb-6"
           >
-            <div className="w-8 md:w-12 h-[2px] bg-orange-500" />
-            <span className="text-orange-500 font-mono tracking-widest text-[10px] md:text-sm uppercase">Our Expertise</span>
+            <Plus size={14} className="text-orange-500" />
+            <span className="text-orange-500 font-mono tracking-[0.3em] text-[10px] md:text-xs uppercase font-bold">
+              Engineering Expertise
+            </span>
           </motion.div>
-          <h3 className="text-4xl md:text-7xl font-black text-white mt-2 md:mt-4 tracking-tighter">
-            WHAT WE <span className="text-zinc-800 outline-text">DO.</span>
+          
+          <h3 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.9]">
+            PRECISION <br />
+            <span className="text-zinc-900 outline-text">SERVICES.</span>
           </h3>
         </div>
 
-        {/* Horizontal Track */}
-        <motion.div style={{ x }} className="flex gap-4 md:gap-8 px-8 md:px-12 mt-16 md:mt-24">
+        {/* --- HORIZONTAL TRACK --- */}
+        <motion.div style={{ x }} className="flex gap-6 md:gap-10 px-8 md:px-16">
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} isMobile={isMobile} />
           ))}
 
-          {/* Last CTA Card */}
-          <div className="flex-shrink-0 w-[300px] md:w-[450px] h-[450px] md:h-[550px] flex flex-col justify-center items-center bg-orange-500 rounded-[2.5rem] p-10 text-black text-center group cursor-pointer shadow-2xl">
-            <Zap size={60} className="mb-6 animate-pulse" />
-            <h2 className="text-3xl md:text-5xl font-black leading-tight mb-8 uppercase italic">Ready to <br /> scale?</h2>
-            <button className="bg-black text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 group-hover:scale-110 transition-transform">
-              Let's Talk <ArrowUpRight size={22} />
-            </button>
+          {/* Last CTA Card - Minimalist Version */}
+          <div className="flex-shrink-0 w-[300px] md:w-[450px] h-[400px] md:h-[500px] flex flex-col justify-between bg-orange-500 rounded-3xl p-10 md:p-14 group cursor-pointer shadow-2xl transition-transform duration-500 hover:scale-[0.98]">
+            <Zap size={40} className="text-black" />
+            <div>
+              <h2 className="text-4xl md:text-6xl font-black leading-none mb-6 text-black tracking-tighter uppercase">
+                READY TO <br /> SCALE?
+              </h2>
+              <button className="bg-black text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all hover:gap-4">
+                Let's Talk <ArrowUpRight size={20} />
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>
 
       <style jsx>{`
         .outline-text {
-          -webkit-text-stroke: 1px #27272a;
+          -webkit-text-stroke: 1px rgba(255,255,255,0.15);
           color: transparent;
         }
       `}</style>
@@ -116,33 +120,38 @@ const HorizontalServices = () => {
 
 const ServiceCard = ({ service, isMobile }) => {
   return (
-    <div className={`relative flex-shrink-0 ${isMobile ? 'w-[300px] h-[450px]' : 'w-[450px] h-[550px]'} overflow-hidden rounded-[2.5rem] border border-zinc-800 bg-gradient-to-br ${service.color} p-8 md:p-12 flex flex-col justify-between group hover:border-zinc-500 transition-all duration-500`}>
+    <div className={`relative flex-shrink-0 ${isMobile ? 'w-[320px] h-[400px]' : 'w-[450px] h-[500px]'} 
+      overflow-hidden rounded-3xl border border-white/5 bg-zinc-900/20 backdrop-blur-3xl 
+      p-10 md:p-14 flex flex-col justify-between group transition-all duration-700 ${service.color}`}>
+      
       <div className="relative z-10">
-        <div className="flex justify-between items-start">
-          <div className="p-3 md:p-4 bg-zinc-900/80 rounded-2xl text-orange-500 border border-white/5 backdrop-blur-sm">
+        <div className="flex justify-between items-start mb-12">
+          <div className="w-16 h-16 flex items-center justify-center bg-zinc-950 rounded-2xl text-white border border-white/10 group-hover:text-orange-500 group-hover:border-orange-500/50 transition-all duration-500">
             {service.icon}
           </div>
-          <span className="font-mono text-zinc-700 text-xl md:text-2xl font-bold">{service.id}</span>
+          <span className="font-mono text-zinc-800 text-3xl font-black transition-colors group-hover:text-orange-500/20">
+            {service.id}
+          </span>
         </div>
 
-        <h3 className="text-3xl md:text-5xl font-extrabold text-white mt-8 md:mt-12 tracking-tight leading-none">{service.title}</h3>
-        <p className="text-zinc-400 mt-4 md:mt-6 text-base md:text-xl font-light leading-relaxed">
+        <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+          {service.title}
+        </h3>
+        <p className="text-zinc-500 text-sm md:text-lg font-light leading-relaxed max-w-[90%] group-hover:text-zinc-300 transition-colors">
           {service.desc}
         </p>
       </div>
 
-      <div className="relative z-10 flex flex-wrap gap-2 mt-4">
+      <div className="relative z-10 flex flex-wrap gap-2">
         {service.tags.map(tag => (
-          <span key={tag} className="text-[9px] md:text-[11px] uppercase tracking-[0.2em] bg-white/5 text-zinc-300 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
+          <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 border border-white/5 px-3 py-1 rounded-md group-hover:border-orange-500/20 group-hover:text-zinc-400 transition-all">
             {tag}
           </span>
         ))}
       </div>
 
-      {/* Background Icon Detail */}
-      <div className="absolute -bottom-6 -right-6 opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-700 rotate-[-15deg]">
-        {React.cloneElement(service.icon, { size: 200 })}
-      </div>
+      {/* Subtle Glow Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
     </div>
   );
 };
