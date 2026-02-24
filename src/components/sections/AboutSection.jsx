@@ -215,7 +215,7 @@ const AboutSection = () => {
 
       <style jsx>{`
         .outline-text-white { -webkit-text-stroke: 1px rgba(255,255,255,0.1); color: transparent; }
-      `}</style>
+      `}</style> 
     </section>
   );
 };
