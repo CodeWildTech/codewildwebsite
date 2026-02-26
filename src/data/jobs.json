@@ -1,0 +1,69 @@
+[
+  {
+    "id": 1,
+    "title": "Full Stack Developer",
+    "dept": "Engineering",
+    "type": "Remote",
+    "fee": "$120k - $160k",
+    "about": "Focus on building scalable architecture and high-performance interfaces using Next.js and Go.",
+    "qualifications": "Bachelor's in CS or equivalent experience.",
+    "experience": "3+ years in production-level environments.",
+    "skills": [
+      "Next.js",
+      "TypeScript",
+      "Golang",
+      "PostgreSQL"
+    ],
+    "status": "open",
+    "createdAt": "2026-02-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Brand Designer",
+    "dept": "Creative",
+    "type": "New York",
+    "fee": "$90k - $130k",
+    "about": "Lead our visual identity across digital touchpoints, focusing on minimalist and high-end aesthetics.",
+    "qualifications": "Degree in Design, Fine Arts, or Visual Communication.",
+    "experience": "2+ years at a creative agency or startup.",
+    "skills": [
+      "Figma",
+      "Adobe CC",
+      "Motion Graphics",
+      "Typography"
+    ],
+    "status": "open",
+    "createdAt": "2026-02-05T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Product Strategist",
+    "dept": "Operations",
+    "type": "Hybrid",
+    "fee": "$110k - $140k",
+    "about": "Shape the product roadmap by bridging the gap between technical constraints and market needs.",
+    "qualifications": "MBA or degree in Business/Product Management.",
+    "experience": "4+ years in product ownership or strategy.",
+    "skills": [
+      "Market Research",
+      "Agile",
+      "Stakeholder Management",
+      "Data Analytics"
+    ],
+    "status": "open",
+    "createdAt": "2026-02-10T00:00:00.000Z"
+  },
+  {
+    "id": 1772104505485,
+    "title": "Ui/Ux designer",
+    "dept": "Designing",
+    "type": "Remote",
+    "fee": "20k",
+    "about": "",
+    "qualifications": "",
+    "experience": "",
+    "skills": [],
+    "status": "open",
+    "createdAt": "2026-02-26T11:15:05.485Z"
+  }
+]

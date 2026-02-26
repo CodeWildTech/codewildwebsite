@@ -1,0 +1,20 @@
+[
+    {
+        "id": 101,
+        "title": "React Intern",
+        "dept": "Engineering",
+        "type": "Remote",
+        "fee": "Paid",
+        "about": "A 6-month immersion into professional software development cycles and modern React patterns.",
+        "qualifications": "Current student or recent graduate in a technical field.",
+        "experience": "Academic projects or personal GitHub portfolio.",
+        "skills": [
+            "React Basics",
+            "JavaScript ES6+",
+            "Tailwind CSS",
+            "Git"
+        ],
+        "status": "open",
+        "createdAt": "2026-02-15T00:00:00.000Z"
+    }
+]

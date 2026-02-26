@@ -1,7 +1,6 @@
 import { Poppins } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import LayoutWrapper from '@/components/LayoutWrapper';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -14,18 +13,13 @@ export const metadata = {
   description: 'Next-Gen Development Agency',
 };
 
-import CustomCursor from '@/components/CustomCursor';
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
         className={`${poppins.variable} font-sans antialiased bg-[#0A0A0A] text-white`}
       >
-        <CustomCursor />
-        <Navbar />
-        {children}
-        <Footer />
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );
