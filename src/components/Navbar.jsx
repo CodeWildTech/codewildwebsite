@@ -10,8 +10,20 @@ import {
   Instagram,
   Linkedin,
   Twitter,
+  Globe,
+  Smartphone,
+  Cloud,
+  Layout,
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
+import { services as serviceData } from '@/data/services';
+
+const serviceIcons = {
+  'website': <Globe size={16} />,
+  'web-application': <Smartphone size={16} />,
+  'app-development': <Cloud size={16} />,
+  'ui-ux-design': <Layout size={16} />,
+};
 
 const Navbar = () => {
   const router = useRouter();
@@ -19,7 +31,9 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileServicesExpanded, setMobileServicesExpanded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -28,7 +42,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Scroll Lock logic to prevent background scroll
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -40,18 +53,21 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', id: 'home' },
     { name: 'About', id: 'about' },
-    { name: 'Services', id: 'services' },
     { name: 'Products', id: 'products' },
+  ];
+
+  const connectionLinks = [
+    { name: 'Instagram', icon: <Instagram size={16} />, url: 'https://instagram.com/codewildtech' },
+    { name: 'LinkedIn', icon: <Linkedin size={16} />, url: 'https://linkedin.com/company/codewildtech' },
+    { name: 'Twitter', icon: <Twitter size={16} />, url: 'https://twitter.com/codewildtech' },
   ];
 
   const handleScrollTo = id => {
     setIsMobileMenuOpen(false);
-
     if (pathname !== '/') {
       router.push(`/#${id}`);
       return;
     }
-
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -62,22 +78,18 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-        scrolled || isMobileMenuOpen
-          ? 'py-4 bg-[#050505] border-b border-white/10 shadow-2xl'
-          : 'py-8 bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled || isMobileMenuOpen
+        ? 'py-3 bg-[#050505]/95 backdrop-blur-xl border-b border-white/10 shadow-2xl'
+        : 'py-6 bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
         {/* LOGO SECTION */}
         <div
           className="flex items-center gap-3 cursor-pointer group z-[120]"
           onClick={() => {
-            if (pathname !== '/') {
-              router.push('/');
-            } else {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            if (pathname !== '/') router.push('/');
+            else window.scrollTo({ top: 0, behavior: 'smooth' });
             setIsMobileMenuOpen(false);
           }}
         >
@@ -95,7 +107,7 @@ const Navbar = () => {
         </div>
 
         {/* DESKTOP LINKS */}
-        <div className="hidden md:flex items-center gap-10">
+        <div className="hidden md:flex items-center gap-8">
           {navItems.map(item => (
             <button
               key={item.id}
@@ -107,6 +119,45 @@ const Navbar = () => {
             </button>
           ))}
 
+          {/* Services Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsServicesOpen(true)}
+            onMouseLeave={() => setIsServicesOpen(false)}
+          >
+            <button className="flex items-center gap-1 text-sm font-medium text-zinc-400 hover:text-white transition-colors group py-2">
+              Services
+              <ChevronDown
+                size={14}
+                className={`transition-transform duration-300 ${isServicesOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+            <AnimatePresence>
+              {isServicesOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 p-1.5 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl"
+                >
+                  {serviceData.map(service => (
+                    <button
+                      key={service.slug}
+                      onClick={() => router.push(`/services/${service.slug}`)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-zinc-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group/item"
+                    >
+                      <span className="text-zinc-600 group-hover/item:text-orange-500 transition-colors">
+                        {serviceIcons[service.slug]}
+                      </span>
+                      {service.title}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Join Us Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setIsDropdownOpen(true)}
@@ -119,14 +170,13 @@ const Navbar = () => {
                 className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
               />
             </button>
-
             <AnimatePresence>
               {isDropdownOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute left-1/2 -translate-x-1/2 mt-2 w-44 p-1.5 bg-zinc-900 border border-white/10 rounded-2xl shadow-xl"
+                  className="absolute left-1/2 -translate-x-1/2 mt-2 w-44 p-1.5 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl"
                 >
                   <button
                     onClick={() => router.push('/careers?type=jobs')}
@@ -184,7 +234,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* FULL SCREEN MOBILE OVERLAY (SOLID DESIGN) */}
+      {/* FULL SCREEN MOBILE OVERLAY */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -196,86 +246,162 @@ const Navbar = () => {
               duration: 0.4,
               ease: [0.23, 1, 0.32, 1],
             }}
-            className="fixed inset-0 bg-[#080808] z-[110] md:hidden flex flex-col"
+            className="fixed left-0 right-0 bottom-0 bg-[#080808] z-[90] md:hidden flex flex-col"
+            style={{ top: 'var(--navbar-height, 64px)' }}
           >
-            {/* High Opacity Header Strip */}
-            <div className="absolute top-0 left-0 right-0 h-24 bg-[#050505] border-b border-white/5 shadow-xl" />
+            <div className="absolute top-[30%] right-[-15%] w-[200px] h-[200px] bg-orange-500/8 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute bottom-[15%] left-[-15%] w-[200px] h-[200px] bg-orange-600/5 rounded-full blur-[80px] pointer-events-none" />
 
-            {/* Solid Decorative Shapes (Not transparent) */}
-            <div className="absolute top-[20%] right-[-10%] w-[250px] h-[250px] bg-orange-500/10 rounded-full blur-[80px] pointer-events-none" />
-            <div className="absolute bottom-[10%] left-[-10%] w-[250px] h-[250px] bg-orange-600/5 rounded-full blur-[80px] pointer-events-none" />
-
-            <div className="flex flex-col h-full p-8 pt-32 overflow-y-auto relative z-20">
-              <nav className="flex flex-col gap-2">
-                <p className="text-orange-500 text-[10px] font-bold uppercase tracking-[0.4em] mb-4">
+            <div className="flex flex-col h-full px-6 pt-6 pb-6 overflow-y-auto relative z-20">
+              {/* Nav Links */}
+              <nav className="flex flex-col">
+                <p className="text-orange-500 text-[9px] font-bold uppercase tracking-[0.4em] mb-3">
                   Menu
                 </p>
                 {navItems.map((item, index) => (
                   <motion.button
                     key={item.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 * index }}
                     onClick={() => handleScrollTo(item.id)}
-                    className="text-5xl font-bold text-white text-left py-4 tracking-tighter hover:text-orange-500 transition-colors border-b border-white/5"
+                    className="text-3xl font-bold text-white text-left py-3 tracking-tight hover:text-orange-500 transition-colors border-b border-white/5"
                   >
                     {item.name}
                   </motion.button>
                 ))}
+
+                {/* Services Expandable */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 * navItems.length }}
+                >
+                  <button
+                    onClick={() => setMobileServicesExpanded(!mobileServicesExpanded)}
+                    className="w-full text-3xl font-bold text-white text-left py-3 tracking-tight hover:text-orange-500 transition-colors border-b border-white/5 flex items-center justify-between"
+                  >
+                    Services
+                    <ChevronDown
+                      size={20}
+                      className={`transition-transform duration-300 ${mobileServicesExpanded ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {mobileServicesExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="py-2 space-y-0.5 border-b border-white/5">
+                          {serviceData.map(service => (
+                            <button
+                              key={service.slug}
+                              onClick={() => {
+                                router.push(`/services/${service.slug}`);
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-base text-zinc-400 hover:text-orange-500 transition-colors text-left rounded-lg active:bg-white/5"
+                            >
+                              <span className="text-zinc-600">{serviceIcons[service.slug]}</span>
+                              {service.title}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
               </nav>
 
-              {/* Solid Background Join Section */}
+              {/* Collaborate & Connections */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 p-6 rounded-3xl bg-white/[0.03] border border-white/10"
+                transition={{ delay: 0.3 }}
+                className="mt-8 space-y-4"
               >
-                <p className="text-zinc-500 text-xs uppercase tracking-widest font-bold mb-4">
-                  Collaborate
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => {
-                      router.push('/careers?type=jobs');
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="py-4 rounded-xl bg-zinc-900 border border-white/10 text-white font-medium hover:bg-orange-500 hover:text-black transition-all"
-                  >
-                    Careers
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push('/careers?type=internship');
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="py-4 rounded-xl bg-zinc-900 border border-white/10 text-white font-medium hover:bg-orange-500 hover:text-black transition-all"
-                  >
-                    Internship
-                  </button>
+                {/* Collaborate */}
+                <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10">
+                  <p className="text-zinc-500 text-[9px] uppercase tracking-[0.3em] font-bold mb-3">
+                    Collaborate
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => {
+                        router.push('/careers?type=jobs');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="py-3 rounded-xl bg-zinc-900 border border-white/10 text-white text-sm font-medium active:bg-orange-500 active:text-black transition-all"
+                    >
+                      Careers
+                    </button>
+                    <button
+                      onClick={() => {
+                        router.push('/careers?type=internship');
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="py-3 rounded-xl bg-zinc-900 border border-white/10 text-white text-sm font-medium active:bg-orange-500 active:text-black transition-all"
+                    >
+                      Internship
+                    </button>
+                  </div>
+                </div>
+
+                {/* Connections */}
+                <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10">
+                  <p className="text-zinc-500 text-[9px] uppercase tracking-[0.3em] font-bold mb-3">
+                    Connections
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {connectionLinks.map(link => (
+                      <a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 min-w-[80px] py-3 rounded-xl bg-zinc-900 border border-white/10 text-white text-xs font-medium active:bg-orange-500 active:text-black transition-all flex items-center justify-center gap-1.5"
+                      >
+                        {link.icon}
+                        {link.name}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Mobile Menu Footer */}
+              {/* Footer */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-auto pt-10"
+                transition={{ delay: 0.45 }}
+                className="mt-auto pt-6"
               >
                 <button
                   onClick={() => handleScrollTo('contact')}
-                  className="w-full py-5 bg-white text-black font-black text-xl rounded-2xl flex items-center justify-center gap-2 mb-8 active:scale-95 transition-transform"
+                  className="w-full py-4 bg-white text-black font-black text-base rounded-2xl flex items-center justify-center gap-2 mb-5 active:scale-[0.97] transition-transform uppercase tracking-wider"
                 >
-                  GET IN TOUCH <ArrowUpRight size={24} />
+                  Get in Touch <ArrowUpRight size={18} />
                 </button>
 
-                <div className="flex justify-between items-center text-zinc-400">
-                  <div className="flex gap-8">
-                    <Instagram size={24} className="hover:text-orange-500" />
-                    <Linkedin size={24} className="hover:text-orange-500" />
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-5">
+                    {connectionLinks.map(link => (
+                      <a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-zinc-600 hover:text-orange-500 transition-colors"
+                      >
+                        {React.cloneElement(link.icon, { size: 20 })}
+                      </a>
+                    ))}
                   </div>
-                  <span className="text-[10px] font-mono tracking-tighter opacity-50 uppercase font-bold">
+                  <span className="text-[9px] font-mono tracking-tight text-zinc-700 uppercase font-bold">
                     CodeWild Tech © 2026
                   </span>
                 </div>

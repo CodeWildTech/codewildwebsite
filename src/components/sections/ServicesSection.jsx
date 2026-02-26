@@ -2,41 +2,28 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowUpRight, Globe, Smartphone, Cloud, Layout, Zap, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { services as serviceData } from '@/data/services';
 
-const services = [
-  {
-    id: '01',
-    title: 'Web Platforms',
-    desc: 'Architecting high-performance, SEO-optimized web applications using Next.js.',
-    icon: <Globe size={32} />,
-    color: 'hover:border-orange-500/50',
-    tags: ['SaaS', 'Next.js']
-  },
-  {
-    id: '02',
-    title: 'Mobile Ecosystems',
-    desc: 'Native and cross-platform mobile solutions for seamless experiences.',
-    icon: <Smartphone size={32} />,
-    color: 'hover:border-blue-500/50',
-    tags: ['React Native', 'iOS']
-  },
-  {
-    id: '03',
-    title: 'Cloud Systems',
-    desc: 'Secure, auto-scaling cloud architecture designed to handle millions.',
-    icon: <Cloud size={32} />,
-    color: 'hover:border-purple-500/50',
-    tags: ['AWS', 'Serverless']
-  },
-  {
-    id: '04',
-    title: 'UI/UX Design',
-    desc: 'Beautiful interfaces that are conversion-optimized and accessible.',
-    icon: <Layout size={32} />,
-    color: 'hover:border-emerald-500/50',
-    tags: ['Figma', 'UX']
-  }
-];
+const iconMap = {
+  '01': <Globe size={32} />,
+  '02': <Smartphone size={32} />,
+  '03': <Cloud size={32} />,
+  '04': <Layout size={32} />,
+};
+
+const colorMap = {
+  '01': 'hover:border-orange-500/50',
+  '02': 'hover:border-blue-500/50',
+  '03': 'hover:border-purple-500/50',
+  '04': 'hover:border-emerald-500/50',
+};
+
+const services = serviceData.map(s => ({
+  ...s,
+  icon: iconMap[s.id],
+  color: colorMap[s.id],
+}));
 
 const HorizontalServices = () => {
   const targetRef = useRef(null);
@@ -59,7 +46,7 @@ const HorizontalServices = () => {
     [0, 1],
     ["0%", isMobile ? "-85%" : "-65%"]
   );
-  
+
   const x = useSpring(xTranslate, { stiffness: 100, damping: 20 });
 
   return (
@@ -80,7 +67,7 @@ const HorizontalServices = () => {
               Engineering Expertise
             </span>
           </motion.div>
-          
+
           <h3 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.9]">
             PRECISION <br />
             <span className="text-zinc-900 outline-text">SERVICES.</span>
@@ -92,6 +79,7 @@ const HorizontalServices = () => {
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} isMobile={isMobile} />
           ))}
+
 
           {/* Last CTA Card - Minimalist Version */}
           <div className="flex-shrink-0 w-[300px] md:w-[450px] h-[400px] md:h-[500px] flex flex-col justify-between bg-orange-500 rounded-3xl p-10 md:p-14 group cursor-pointer shadow-2xl transition-transform duration-500 hover:scale-[0.98]">
@@ -119,11 +107,15 @@ const HorizontalServices = () => {
 };
 
 const ServiceCard = ({ service, isMobile }) => {
+  const router = useRouter();
+
   return (
-    <div className={`relative flex-shrink-0 ${isMobile ? 'w-[320px] h-[400px]' : 'w-[450px] h-[500px]'} 
+    <div
+      onClick={() => router.push(`/services/${service.slug}`)}
+      className={`relative flex-shrink-0 ${isMobile ? 'w-[320px] h-[400px]' : 'w-[450px] h-[500px]'} 
       overflow-hidden rounded-3xl border border-white/5 bg-zinc-900/20 backdrop-blur-3xl 
-      p-10 md:p-14 flex flex-col justify-between group transition-all duration-700 ${service.color}`}>
-      
+      p-10 md:p-14 flex flex-col justify-between group transition-all duration-700 cursor-pointer ${service.color}`}
+    >
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-12">
           <div className="w-16 h-16 flex items-center justify-center bg-zinc-950 rounded-2xl text-white border border-white/10 group-hover:text-orange-500 group-hover:border-orange-500/50 transition-all duration-500">
@@ -142,12 +134,17 @@ const ServiceCard = ({ service, isMobile }) => {
         </p>
       </div>
 
-      <div className="relative z-10 flex flex-wrap gap-2">
-        {service.tags.map(tag => (
-          <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 border border-white/5 px-3 py-1 rounded-md group-hover:border-orange-500/20 group-hover:text-zinc-400 transition-all">
-            {tag}
-          </span>
-        ))}
+      <div className="relative z-10 flex items-end justify-between">
+        <div className="flex flex-wrap gap-2">
+          {service.tags.map(tag => (
+            <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 border border-white/5 px-3 py-1 rounded-md group-hover:border-orange-500/20 group-hover:text-zinc-400 transition-all">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-zinc-600 group-hover:border-orange-500/50 group-hover:text-orange-500 group-hover:bg-orange-500/5 transition-all duration-500">
+          <ArrowUpRight size={18} />
+        </div>
       </div>
 
       {/* Subtle Glow Effect */}

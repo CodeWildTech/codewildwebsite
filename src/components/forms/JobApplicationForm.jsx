@@ -42,7 +42,6 @@ const JobApplicationForm = ({
         newErrors.email = 'Invalid email address';
       if (!formData.phone) newErrors.phone = 'Phone is required';
     } else if (currentStep === 2) {
-      // Portfolio/LinkedIn is now optional, so we only validate format if text exists
       if (formData.portfolio && !/^https?:\/\/.+/.test(formData.portfolio))
         newErrors.portfolio = 'Must be a valid URL (https://...)';
       if (!formData.resumeUrl) newErrors.resumeUrl = 'Resume link is required';
@@ -74,7 +73,6 @@ const JobApplicationForm = ({
 
   return (
     <AnimatePresence>
-      {/* Added p-4 to ensure it doesn't touch screen edges on mobile */}
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 overflow-hidden">
         <motion.div
           initial={{ opacity: 0 }}
@@ -88,10 +86,9 @@ const JobApplicationForm = ({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          /* Responsive Height: max-h-[90dvh] ensures padding around the modal on mobile */
           className="relative w-full max-w-4xl bg-zinc-950 border border-white/10 rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90dvh] md:max-h-none"
         >
-          {/* Sidebar */}
+          {/* Left Sidebar (Stays Orange) */}
           <div className="w-full md:w-72 bg-orange-600 p-6 md:p-10 text-white shrink-0">
             <div className="flex flex-row md:flex-col justify-between items-center md:items-start h-full">
               <div>
@@ -103,7 +100,6 @@ const JobApplicationForm = ({
                 </p>
               </div>
 
-              {/* Mobile Step Indicator (Dots) */}
               <div className="flex md:flex-col gap-2 md:gap-4 md:mt-10">
                 {[1, 2, 3].map(i => (
                   <div
@@ -115,11 +111,11 @@ const JobApplicationForm = ({
             </div>
           </div>
 
-          {/* Form Area */}
-          <div className="flex-1 p-6 md:p-12 bg-zinc-950 overflow-y-auto custom-scrollbar relative">
+          {/* Right Form Area (Changed to White) */}
+          <div className="flex-1 p-6 md:p-12 bg-white overflow-y-auto custom-scrollbar relative">
             <button
               onClick={onClose}
-              className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors z-10"
+              className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-900 transition-colors z-10"
             >
               <X size={20} />
             </button>
@@ -136,7 +132,7 @@ const JobApplicationForm = ({
                   className="space-y-6"
                 >
                   <header>
-                    <h3 className="text-white text-xl font-semibold">
+                    <h3 className="text-zinc-900 text-xl font-semibold">
                       {step === 1 && 'Personal Details'}
                       {step === 2 && 'Work & Portfolio'}
                       {step === 3 && 'Final Message'}
@@ -192,7 +188,6 @@ const JobApplicationForm = ({
                         <CustomInput
                           label="Resume URL (G-Drive/Link)"
                           name="resumeUrl"
-                          type="file"
                           icon={<LinkIcon size={16} />}
                           placeholder="Public share link"
                           value={formData.resumeUrl}
@@ -212,7 +207,7 @@ const JobApplicationForm = ({
                           value={formData.message}
                           onChange={handleChange}
                           rows={4}
-                          className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-all resize-none"
+                          className="w-full bg-zinc-50 border border-zinc-200 rounded-2xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-orange-500 transition-all resize-none placeholder:text-zinc-400"
                           placeholder="Tell us why you're a great fit..."
                         />
                       </div>
@@ -223,7 +218,7 @@ const JobApplicationForm = ({
                     {step > 1 ? (
                       <button
                         onClick={prevStep}
-                        className="text-zinc-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
+                        className="text-zinc-400 hover:text-zinc-900 text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2"
                       >
                         <ChevronLeft size={14} /> Back
                       </button>
@@ -234,7 +229,7 @@ const JobApplicationForm = ({
                     {step < 3 ? (
                       <button
                         onClick={nextStep}
-                        className="bg-white text-black px-6 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center gap-2"
+                        className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-orange-500 transition-all flex items-center gap-2"
                       >
                         Next <ChevronRight size={14} />
                       </button>
@@ -261,26 +256,26 @@ const JobApplicationForm = ({
 
 const CustomInput = ({ label, icon, error, ...props }) => (
   <div className="space-y-2 group">
-    <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1 group-focus-within:text-orange-500 transition-colors">
+    <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1 group-focus-within:text-orange-600 transition-colors">
       {label}
     </label>
     <div className="relative">
       <div
-        className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error ? 'text-red-400' : 'text-zinc-600 group-focus-within:text-orange-500'}`}
+        className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${error ? 'text-red-500' : 'text-zinc-400 group-focus-within:text-orange-500'}`}
       >
         {icon}
       </div>
       <input
         {...props}
-        className={`w-full bg-white/[0.03] border rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none transition-all ${
+        className={`w-full bg-zinc-50 border rounded-2xl pl-11 pr-4 py-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none transition-all ${
           error
-            ? 'border-red-500/50'
-            : 'border-white/10 focus:border-orange-500/50'
+            ? 'border-red-500'
+            : 'border-zinc-200 focus:border-orange-500'
         }`}
       />
     </div>
     {error && (
-      <p className="text-[10px] text-red-400 font-medium ml-1 flex items-center gap-1">
+      <p className="text-[10px] text-red-500 font-medium ml-1 flex items-center gap-1">
         <AlertCircle size={10} /> {error}
       </p>
     )}
@@ -296,7 +291,7 @@ const SuccessState = () => (
     <div className="w-20 h-20 bg-orange-500/10 rounded-full flex items-center justify-center mb-6 border border-orange-500/20 shadow-[0_0_30px_rgba(249,115,22,0.1)]">
       <Sparkles size={32} className="text-orange-500" />
     </div>
-    <h4 className="text-2xl font-bold text-white mb-2">Success!</h4>
+    <h4 className="text-2xl font-bold text-zinc-900 mb-2">Success!</h4>
     <p className="text-zinc-500 text-sm max-w-[240px]">
       Application sent. We'll be in touch soon.
     </p>

@@ -12,7 +12,7 @@ import ContactSection from '@/components/sections/ContactSection';
 
 export default function Home() {
   const containerRef = useRef(null);
-  
+
   // Track scroll progress of the hero section
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -49,7 +49,7 @@ export default function Home() {
 
       <section className="relative z-10 pt-40 w-full h-screen sticky top-0 overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-8 h-full flex flex-col justify-between pb-20">
-          
+
           {/* Status Bar */}
           <div className="flex justify-between items-start">
             <div />
@@ -76,7 +76,7 @@ export default function Home() {
                   TECHNOLOGY
                 </span>
               </motion.h1>
-              
+
               <div className="mt-10 max-w-md">
                 <p className="text-xl text-zinc-400 font-light leading-relaxed">
                   We craft <span className="text-white">high-performance</span> digital assets that bridge engineering and design.
@@ -91,8 +91,8 @@ export default function Home() {
             </motion.div>
 
             {/* Right Side: Expanding Image */}
-            
-             
+
+
           </div>
         </div>
       </section>
