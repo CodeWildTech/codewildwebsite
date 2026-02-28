@@ -17,6 +17,7 @@ import {
 
 const AboutSection = () => {
   const containerRef = useRef(null);
+  const workflowRef = useRef(null); // Ref specifically for workflow progress
   const [selectedMember, setSelectedMember] = useState(null);
 
   // ─── DATA ───
@@ -30,10 +31,10 @@ const AboutSection = () => {
   ];
 
   const processes = [
-    { step: '01', title: 'Discovery', desc: 'Understanding vision through deep research and stakeholder alignment.', icon: <Search size={24} /> },
-    { step: '02', title: 'Design', desc: 'Crafting intuitive high-end interfaces with a focus on user psychology.', icon: <PenTool size={24} /> },
-    { step: '03', title: 'Develop', desc: 'Building scalable systems with clean code and robust architecture.', icon: <Terminal size={24} /> },
-    { step: '04', title: 'Deploy', desc: 'Launching high-performance products with continuous monitoring.', icon: <Rocket size={24} /> },
+    { step: '01', title: 'Discovery', desc: 'Understanding vision through deep research and stakeholder alignment.', icon: <Search size={20} /> },
+    { step: '02', title: 'Design', desc: 'Crafting intuitive high-end interfaces with a focus on user psychology.', icon: <PenTool size={20} /> },
+    { step: '03', title: 'Develop', desc: 'Building scalable systems with clean code and robust architecture.', icon: <Terminal size={20} /> },
+    { step: '04', title: 'Deploy', desc: 'Launching high-performance products with continuous monitoring.', icon: <Rocket size={20} /> },
   ];
 
   const duplicatedTeam = [...team, ...team];
@@ -44,8 +45,12 @@ const AboutSection = () => {
     offset: ['start end', 'end start'],
   });
 
-  // Fixed: Added smoothProgress to resolve the build error
-  const smoothProgress = useSpring(scrollYProgress, {
+  const { scrollYProgress: workflowProgress } = useScroll({
+    target: workflowRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const smoothProgress = useSpring(workflowProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
@@ -144,10 +149,14 @@ const AboutSection = () => {
           </div>
         </div>
 
+      
+
         {/* ─── TEAM MARQUEE ─── */}
         <div className="mb-60">
-          <div className="flex justify-between items-end mb-20">
-            <h2 className="text-6xl md:text-7xl font-bold tracking-tighter">THE <span className="text-zinc-800 transition-colors hover:text-orange-500">CWT</span> SQUAD</h2>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-4">
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">
+              THE <span className="text-zinc-800 transition-colors hover:text-orange-500">CWT</span> SQUAD
+            </h2>
             <p className="text-zinc-500 text-sm font-mono">[ 06 Core Members ]</p>
           </div>
           <div className="relative flex overflow-hidden">
@@ -171,92 +180,88 @@ const AboutSection = () => {
             <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#050505] to-transparent z-10" />
           </div>
         </div>
+      </div>
 
-        {/* ─── THE NEW WORKFLOW (MODERN RE-DESIGN) ─── */}
-        <div className="relative pb-32 max-w-7xl mx-auto px-6">
-          {/* Header Section - More Compact */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
-            <div className="max-w-2xl">
-              <motion.h3
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                className="text-[10px] uppercase tracking-[0.6em] text-orange-500 font-black mb-3"
-              >
+        {/* ─── WORKFLOW SECTION (INTEGRATED) ─── */}
+        <div ref={workflowRef} className="relative pb-40 max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="max-w-xl">
+              <motion.h3 initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} className="text-[10px] uppercase tracking-[0.6em] text-orange-500 font-black mb-3">
                 The Workflow
               </motion.h3>
-              <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] text-white">
-                Engineered <br />
-                <span className="text-transparent" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.3)" }}>Precision</span>
+              <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-white">
+                Our <span className="text-zinc-800 transition-colors hover:text-orange-500">Process</span>
               </h2>
             </div>
-            <p className="text-zinc-500 max-w-[280px] font-light text-xs md:text-sm italic border-l border-zinc-800 pl-4 mb-1">
+            <p className="text-zinc-500 max-w-[280px] font-light text-xs italic border-l border-zinc-800 pl-4">
               Every line of code and every pixel is a deliberate step toward excellence.
             </p>
           </div>
 
-          {/* Animated Linear Flow Section */}
-          <div className="relative max-w-5xl mx-auto">
-
-            {/* The Scroll-Linked Connector Line - Better Mobile Position */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-[1px] bg-zinc-900/50 -translate-x-1/2 overflow-hidden">
+          {/* Desktop/Mobile Layout Switcher */}
+          <div className="relative">
+            {/* Background Line: Horizontal on Desktop, Vertical on Mobile */}
+            <div className="absolute left-10 md:left-0 md:right-0 md:top-6 top-0 bottom-0 w-[1px] md:w-full md:h-[1px] bg-zinc-900/50 z-0">
               <motion.div
+                style={{ 
+                  scaleX: smoothProgress, // Desktop 
+                  scaleY: smoothProgress, // Mobile
+                  originX: 0, 
+                  originY: 0 
+                }}
+                className="w-full h-full bg-gradient-to-r md:from-orange-500 md:to-transparent from-orange-500 to-transparent shadow-[0_0_10px_rgba(249,115,22,0.4)] md:block hidden"
+              />
+               <motion.div
                 style={{ scaleY: smoothProgress, originY: 0 }}
-                className="w-full h-full bg-gradient-to-b from-orange-500 via-orange-400 to-transparent shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+                className="w-full h-full bg-gradient-to-b from-orange-500 to-transparent block md:hidden"
               />
             </div>
 
-            <div className="space-y-24 md:space-y-32">
+            {/* Steps Container */}
+            <div className="flex flex-col md:flex-row gap-12 md:gap-8 justify-between relative z-10">
               {processes.map((item, i) => (
-                <div key={i} className="relative flex items-center group">
-
-                  <div className={`flex flex-col md:flex-row items-start md:items-center w-full ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-
-                    {/* Text Content Area - Responsive Sizing */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-50px" }}
-                      transition={{ duration: 0.6, delay: i * 0.1 }}
-                      className={`w-full md:w-[45%] ${i % 2 === 0 ? 'md:text-right md:pr-16' : 'md:text-left md:pl-16'} pl-20 md:pl-0`}
-                    >
-                      <span className="text-orange-500 font-mono text-[10px] tracking-[0.3em] mb-2 block uppercase opacity-80">Phase {item.step}</span>
-                      <h4 className="text-2xl md:text-4xl font-bold text-white mb-3 group-hover:text-orange-500 transition-colors duration-500">
-                        {item.title}
-                      </h4>
-                      <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed max-w-sm md:max-w-none ml-0 ${i % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}">
-                        {item.desc}
-                      </p>
-                    </motion.div>
-
-                    {/* The Animated Node (Icon) - Perfectly Aligned */}
-                    <div className="absolute left-8 md:left-1/2 -translate-x-1/2 flex items-center justify-center z-20">
-                      <motion.div
-                        whileInView={{ scale: [0.8, 1.1, 1], opacity: [0, 1] }}
-                        viewport={{ once: true }}
-                        className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-zinc-950 border border-zinc-800 flex items-center justify-center text-white group-hover:border-orange-500 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all duration-500"
-                      >
-                        <div className="scale-75 md:scale-100 group-hover:text-orange-500 transition-colors">
-                          {item.icon}
-                        </div>
-                        {/* Pulse Effect for Active Step */}
-                        <div className="absolute inset-0 rounded-full bg-orange-500/20 animate-ping opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </motion.div>
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  viewport={{ once: true }}
+                  className="relative md:w-1/4 group pl-20 md:pl-0"
+                >
+                  {/* Icon Node */}
+                  <div className="absolute left-6 md:relative md:left-0 md:mb-12 flex justify-start">
+                    <div className="w-12 h-12 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center text-white group-hover:border-orange-500 group-hover:shadow-[0_0_20px_rgba(249,115,22,0.2)] transition-all duration-500">
+                      <div className="group-hover:text-orange-500 transition-colors">
+                        {item.icon}
+                      </div>
                     </div>
-
-                    {/* Spacer for desktop layout */}
-                    <div className="hidden md:block w-[45%]" />
+                    {/* Step Number Badge */}
+                    <div className="absolute -bottom-6 left-0 hidden md:block">
+                      <span className="text-orange-500 font-mono text-[9px] tracking-[0.2em] uppercase opacity-70">Phase {item.step}</span>
+                    </div>
                   </div>
 
-                  {/* Ghost Number - Scaled Down for Classiness */}
-                  <div className={`absolute top-1/2 -translate-y-1/2 text-[8rem] md:text-[12rem] font-black text-white/[0.015] pointer-events-none select-none -z-10 transition-all duration-700 group-hover:text-orange-500/[0.03] ${i % 2 === 0 ? 'right-0' : 'left-0'}`}>
+                  {/* Text Content */}
+                  <div>
+                    <span className="md:hidden block text-orange-500 font-mono text-[9px] tracking-[0.2em] uppercase mb-1">Phase {item.step}</span>
+                    <h4 className="text-xl font-bold text-white mb-3 group-hover:text-orange-500 transition-colors duration-500">
+                      {item.title}
+                    </h4>
+                    <p className="text-zinc-500 text-sm font-light leading-relaxed pr-4">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  {/* Ghost Number */}
+                  <div className="absolute -top-4 right-0 text-7xl font-black text-white/[0.02] pointer-events-none select-none -z-10 group-hover:text-orange-500/[0.04] transition-all duration-700">
                     {item.step}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
       {/* ─── PROFILE POPUP MODAL ─── */}
       <AnimatePresence>
@@ -348,6 +353,15 @@ const AboutSection = () => {
         )}
       </AnimatePresence>
 
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </section>
   );
 };
