@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Plus } from 'lucide-react';
 
 const COLUMN_1 = [
   { src: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070', title: 'Neural Interface' },
@@ -24,15 +24,14 @@ function ImageCard({ item }) {
         whileHover={{ scale: 1.02 }}
         className="relative w-[240px] md:w-[350px] aspect-[4/3] rounded-xl overflow-hidden 
                    bg-zinc-900 shadow-[0_30px_60px_rgba(0,0,0,0.5)]
-                   cursor-pointer border-none" // Removed outline
+                   cursor-pointer border-none"
       >
         <img
           src={item.src}
           alt={item.title}
-          className="w-full h-full object-cover transition-all duration-700" // Removed grayscale
+          className="w-full h-full object-cover transition-all duration-700"
         />
         
-        {/* --- FUNKY IN-IMAGE MESSAGE BOX --- */}
         <AnimatePresence>
           {isHovered && (
             <motion.div
@@ -42,10 +41,8 @@ function ImageCard({ item }) {
               className="absolute bottom-4 left-4 z-50 pointer-events-none"
             >
               <div className="relative bg-white text-black text-[11px] font-black tracking-tighter uppercase px-3 py-2 rounded-sm shadow-2xl flex items-center gap-2">
-                {/* Funky Accent Dot */}
                 <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
                 {item.title}
-                {/* Funky decorative corner */}
                 <div className="absolute -top-1 -right-1 w-2 h-2 bg-orange-500" />
               </div>
             </motion.div>
@@ -83,7 +80,7 @@ export default function Advertise() {
   return (
     <section ref={sectionRef} className="relative w-full min-h-screen flex items-center overflow-hidden bg-[#050505] py-20 md:py-32 px-6">
       
-      {/* BRAND GRADIENT BACKGROUND */}
+      {/* ─── BRAND GRADIENT BACKGROUND ─── */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-orange-600/10 blur-[150px] rounded-full" />
         <div className="absolute bottom-[20%] left-[-10%] w-[400px] h-[400px] bg-orange-500/5 blur-[120px] rounded-full" />
@@ -91,31 +88,61 @@ export default function Advertise() {
 
       <div className="max-w-[1440px] mx-auto w-full grid lg:grid-cols-2 gap-12 md:gap-24 items-center z-10">
         
-        {/* LEFT CONTENT */}
-        <div className="space-y-8 md:space-y-12 text-center lg:text-left">
+        {/* ─── LEFT CONTENT WITH PATTERN ─── */}
+        <div className="relative space-y-12 text-center lg:text-left py-20">
+          
+          {/* Subtle Background Pattern (Grid) */}
+          <div className="absolute -inset-y-20 -inset-x-10 pointer-events-none opacity-[0.03] overflow-hidden -z-10">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+          </div>
+
           <div className="space-y-6">
-            <motion.div initial={{ width: 0 }} whileInView={{ width: 80 }} className="h-[1px] bg-orange-500 mx-auto lg:mx-0" />
-            <h1 className="text-6xl md:text-9xl font-bold leading-[0.85] tracking-tighter text-white">
-              CRAFT <br />
-              <span className="text-zinc-800 hover:text-orange-500 transition-colors duration-500 uppercase">Wildly.</span>
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="flex items-center justify-center lg:justify-start gap-4 text-orange-500"
+            >
+              <Plus size={14} />
+              <span className="text-[10px] uppercase tracking-[0.6em] font-black">Community Events</span>
+            </motion.div>
+
+            <h1 className="text-6xl md:text-[9rem] font-black leading-[0.8] tracking-[-0.06em] text-white uppercase">
+              UNITE <br />
+              <span className="text-zinc-900 transition-colors duration-700 hover:text-orange-500" style={{ WebkitTextStroke: "1px rgba(255,255,255,0.15)" }}>
+                WILDLY
+              </span>
             </h1>
           </div>
 
-          <p className="text-lg md:text-2xl text-zinc-400 font-light max-w-lg leading-relaxed italic mx-auto lg:mx-0">
-            "Transforming complex logic into <span className="text-white font-normal">stunning visual experiences</span>."
+          <p className="text-lg md:text-2xl text-zinc-400 font-light max-w-lg leading-relaxed mx-auto lg:mx-0 border-l border-zinc-800 pl-6">
+            Beyond the technical architecture, we celebrate the <span className="text-white font-semibold">human energy</span> and fests that fuel our innovation.
           </p>
 
-          <div className="flex justify-center lg:justify-start pt-6">
-            <button className="flex items-center gap-4 text-white text-xs font-bold uppercase tracking-[0.4em] group">
-              <span className="w-14 h-14 rounded-full border border-zinc-800 flex items-center justify-center group-hover:bg-orange-500 group-hover:border-orange-500 transition-all duration-500">
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          <div className="flex justify-center lg:justify-start pt-4">
+            <button className="flex items-center gap-6 text-white text-[11px] font-bold uppercase tracking-[0.5em] group">
+              <span className="relative w-16 h-16 rounded-full border border-zinc-800 flex items-center justify-center group-hover:bg-orange-500 group-hover:border-orange-500 transition-all duration-500 shadow-2xl">
+                <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                {/* Subtle Ripple Effect */}
+                <span className="absolute inset-0 rounded-full border border-orange-500/30 scale-110 animate-pulse group-hover:hidden" />
               </span>
-              View our Work
+              <span className="group-hover:text-orange-500 transition-colors">Explore Moments</span>
             </button>
+          </div>
+
+          {/* Large Ghost Text Background */}
+          <div className="absolute -bottom-10 -left-10 text-[12rem] font-black text-white/[0.01] pointer-events-none select-none uppercase tracking-tighter">
+            Fests
           </div>
         </div>
 
-        {/* RIGHT SIDE IMAGE GRID */}
+        {/* ─── RIGHT SIDE IMAGE GRID ─── */}
         <div className="relative h-[600px] md:h-[800px] w-full flex gap-4 md:gap-10 justify-center lg:justify-end items-center overflow-hidden">
           
           <div className="absolute top-0 left-0 w-full h-24 md:h-32 bg-gradient-to-b from-[#050505] via-[#050505]/80 to-transparent z-20 pointer-events-none" />

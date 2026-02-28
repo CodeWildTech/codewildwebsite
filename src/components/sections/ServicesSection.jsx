@@ -6,17 +6,17 @@ import { useRouter } from 'next/navigation';
 import { services as serviceData } from '@/data/services';
 
 const iconMap = {
-  '01': <Globe size={32} />,
-  '02': <Smartphone size={32} />,
-  '03': <Cloud size={32} />,
-  '04': <Layout size={32} />,
+  '01': <Globe size={28} />,
+  '02': <Smartphone size={28} />,
+  '03': <Cloud size={28} />,
+  '04': <Layout size={28} />,
 };
 
 const colorMap = {
-  '01': 'hover:border-orange-500/50',
-  '02': 'hover:border-blue-500/50',
-  '03': 'hover:border-purple-500/50',
-  '04': 'hover:border-emerald-500/50',
+  '01': 'hover:border-orange-500/30',
+  '02': 'hover:border-blue-500/30',
+  '03': 'hover:border-purple-500/30',
+  '04': 'hover:border-emerald-500/30',
 };
 
 const services = serviceData.map(s => ({
@@ -40,117 +40,135 @@ const HorizontalServices = () => {
     target: targetRef,
   });
 
-  // Smoother scroll transition
+  // FIXED: Increased the negative translation for mobile so all cards pass through
   const xTranslate = useTransform(
     scrollYProgress,
-    [0, 1],
-    ["0%", isMobile ? "-85%" : "-65%"]
+    [0.3, 1], 
+    ["0%", isMobile ? "-180%" : "-75%"] 
   );
-
-  const x = useSpring(xTranslate, { stiffness: 100, damping: 20 });
+  const x = useSpring(xTranslate, { stiffness: 50, damping: 20 });
 
   return (
-    <section id="services" ref={targetRef} className="relative h-[400vh] bg-[#020202]">
-      {/* Sticky Container */}
+    <section id="services" ref={targetRef} className="relative h-[600vh] bg-[#020202]">
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-
-        {/* --- HEADER SECTION --- */}
-        {/* Increased top padding and clear separation from the cards */}
-        <div className="container mx-auto px-8 md:px-16 mb-20 md:mb-32">
+        
+        {/* --- HEADER --- */}
+        <div className="container mx-auto px-8 md:px-16 mb-8 md:mb-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-2 mb-4"
           >
-            <Plus size={14} className="text-orange-500" />
-            <span className="text-orange-500 font-mono tracking-[0.3em] text-[10px] md:text-xs uppercase font-bold">
-              Engineering Expertise
+            <div className="h-[1px] w-8 bg-orange-500" />
+            <span className="text-orange-500 font-mono tracking-[0.3em] text-[10px] uppercase font-bold">
+              Expertise
             </span>
           </motion.div>
 
-          <h3 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.9]">
-            PRECISION <br />
-            <span className="text-zinc-900 outline-text">SERVICES.</span>
+          <h3 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-none uppercase">
+            <span className="block">Precision</span>
+            <span className="block opacity-60 font-medium">Solutions</span>
           </h3>
         </div>
 
         {/* --- HORIZONTAL TRACK --- */}
-        <motion.div style={{ x }} className="flex gap-6 md:gap-10 px-8 md:px-16">
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} isMobile={isMobile} />
+        <motion.div style={{ x }} className="flex gap-6 md:gap-10 px-8 md:px-16 items-center">
+          {services.map((service, index) => (
+            <ServiceCard 
+                key={service.id} 
+                service={service} 
+                isMobile={isMobile} 
+                index={index} 
+                total={services.length}
+                scrollYProgress={scrollYProgress} 
+            />
           ))}
 
-
-          {/* Last CTA Card - Minimalist Version */}
-          <div className="flex-shrink-0 w-[300px] md:w-[450px] h-[400px] md:h-[500px] flex flex-col justify-between bg-orange-500 rounded-3xl p-10 md:p-14 group cursor-pointer shadow-2xl transition-transform duration-500 hover:scale-[0.98]">
-            <Zap size={40} className="text-black" />
-            <div>
-              <h2 className="text-4xl md:text-6xl font-black leading-none mb-6 text-black tracking-tighter uppercase">
-                READY TO <br /> SCALE?
-              </h2>
-              <button className="bg-black text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all hover:gap-4">
-                Let's Talk <ArrowUpRight size={20} />
-              </button>
-            </div>
-          </div>
+          <CTACard scrollYProgress={scrollYProgress} isMobile={isMobile} />
         </motion.div>
       </div>
-
-      <style jsx>{`
-        .outline-text {
-          -webkit-text-stroke: 1px rgba(255,255,255,0.15);
-          color: transparent;
-        }
-      `}</style>
     </section>
   );
 };
 
-const ServiceCard = ({ service, isMobile }) => {
+const ServiceCard = ({ service, isMobile, index, total, scrollYProgress }) => {
   const router = useRouter();
+  
+  const entranceStart = (index * 0.05); 
+  const entranceEnd = entranceStart + 0.15;
+
+  const cardX = useTransform(scrollYProgress, [0, entranceStart, entranceEnd], [isMobile ? 300 : 600, isMobile ? 300 : 600, 0]);
+  const scale = useTransform(scrollYProgress, [entranceStart, entranceEnd], [0.7, 1]);
+  const opacity = useTransform(scrollYProgress, [entranceStart, entranceEnd], [0, 1]);
 
   return (
-    <div
+    <motion.div
       onClick={() => router.push(`/services/${service.slug}`)}
-      className={`relative flex-shrink-0 ${isMobile ? 'w-[320px] h-[400px]' : 'w-[450px] h-[500px]'} 
-      overflow-hidden rounded-3xl border border-white/5 bg-zinc-900/20 backdrop-blur-3xl 
-      p-10 md:p-14 flex flex-col justify-between group transition-all duration-700 cursor-pointer ${service.color}`}
+      style={{ scale, opacity, x: cardX }}
+      whileHover={{ y: -12, transition: { duration: 0.3 } }}
+      className={`relative flex-shrink-0 ${isMobile ? 'w-[280px] h-[360px]' : 'w-[340px] h-[400px]'} 
+      overflow-hidden rounded-[2.5rem] border border-white/5 bg-zinc-900/40 backdrop-blur-xl 
+      p-8 md:p-10 flex flex-col justify-between group cursor-pointer ${service.color}`}
     >
       <div className="relative z-10">
-        <div className="flex justify-between items-start mb-12">
-          <div className="w-16 h-16 flex items-center justify-center bg-zinc-950 rounded-2xl text-white border border-white/10 group-hover:text-orange-500 group-hover:border-orange-500/50 transition-all duration-500">
+        <div className="flex justify-between items-start mb-6">
+          <div className="w-14 h-14 flex items-center justify-center bg-zinc-950/50 rounded-2xl text-white border border-white/5 group-hover:text-orange-500 group-hover:border-orange-500/30 transition-all duration-500">
             {service.icon}
           </div>
-          <span className="font-mono text-zinc-800 text-3xl font-black transition-colors group-hover:text-orange-500/20">
+          <span className="font-mono text-zinc-800 text-2xl font-black transition-colors group-hover:text-orange-500/10">
             {service.id}
           </span>
         </div>
 
-        <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">
           {service.title}
         </h3>
-        <p className="text-zinc-500 text-sm md:text-lg font-light leading-relaxed max-w-[90%] group-hover:text-zinc-300 transition-colors">
+        <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed line-clamp-3 group-hover:text-zinc-300 transition-colors">
           {service.desc}
         </p>
       </div>
 
       <div className="relative z-10 flex items-end justify-between">
         <div className="flex flex-wrap gap-2">
-          {service.tags.map(tag => (
-            <span key={tag} className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 border border-white/5 px-3 py-1 rounded-md group-hover:border-orange-500/20 group-hover:text-zinc-400 transition-all">
+          {service.tags.slice(0, 2).map(tag => (
+            <span key={tag} className="text-[9px] uppercase tracking-widest font-bold text-zinc-600 border border-white/5 px-2 py-1 rounded-md">
               {tag}
             </span>
           ))}
         </div>
-        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-zinc-600 group-hover:border-orange-500/50 group-hover:text-orange-500 group-hover:bg-orange-500/5 transition-all duration-500">
-          <ArrowUpRight size={18} />
+        <div className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-zinc-600 group-hover:border-orange-500 transition-all duration-500">
+          <ArrowUpRight size={16} />
         </div>
       </div>
-
-      {/* Subtle Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-    </div>
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+    </motion.div>
   );
 };
+
+const CTACard = ({ scrollYProgress, isMobile }) => {
+    const cardX = useTransform(scrollYProgress, [0.2, 0.35], [isMobile ? 300 : 600, 0]);
+    const scale = useTransform(scrollYProgress, [0.2, 0.35], [0.7, 1]);
+    const opacity = useTransform(scrollYProgress, [0.2, 0.35], [0, 1]);
+
+    return (
+        <motion.div 
+            style={{ scale, opacity, x: cardX }}
+            whileHover={{ y: -5 }}
+            className="flex-shrink-0 w-[280px] md:w-[340px] h-[360px] md:h-[400px] flex flex-col justify-between bg-orange-500 rounded-[2.5rem] p-8 md:p-12 group cursor-pointer"
+        >
+            <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
+                <Zap size={24} className="text-orange-500" />
+            </div>
+            <div>
+              <h2 className="text-2xl md:text-4xl font-black leading-tight mb-6 text-black tracking-tighter uppercase">
+                READY TO <br /> SCALE?
+              </h2>
+              <button className="bg-black text-white px-6 py-3 rounded-full text-xs font-bold flex items-center gap-2">
+                Let's Talk <ArrowUpRight size={18} />
+              </button>
+            </div>
+        </motion.div>
+    );
+}
 
 export default HorizontalServices;
